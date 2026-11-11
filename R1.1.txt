@@ -1,0 +1,224 @@
+Connected to Dynamips VM "R1" (ID 2, type c7200) - Console port
+Press ENTER to get the prompt.
+E
+*Nov 11 18:56:18.707: AAA/AUTHEN/START (2534112563): non-console enable - default to enable password
+*Nov 11 18:56:18.707: AAA/AUTHEN/START (2534112563): Method=ENABLE
+*Nov 11 18:56:18.707: AAA/AUTHEN (2534112563): status = GETPASS
+R1#
+*Nov 11 18:56:21.743: AAA/AUTHEN/CONT (2534112563): continue_login (user='(undef)')
+*Nov 11 18:56:21.743: AAA/AUTHEN (2534112563): status = GETPASS
+*Nov 11 18:56:21.743: AAA/AUTHEN/CONT (2534112563): Method=ENABLE
+*Nov 11 18:56:21.747: AAA/AUTHEN (2534112563): status = PASS
+*Nov 11 18:56:21.747: AAA/MEMORY: free_user (0x67EFEE84) user='NULL' ruser='NULL' port='tty2' rem_addr='10.9.49.1' authen_type=ASCII service=ENABLE priv=15 vrf= (id=0)u all
+All possible debugging has been turned off
+R1#exit
+
+[Connection to 10.9.49.1 closed by foreign host]
+R1#ssh -l user10 10.9.49.1
+Password:
+CAcceso autorizado solamente. Acceso no autorizado prohibido.R1>en
+Password:
+R1#undebug all
+All possible debugging has been turned off
+R1#configure terminal
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1(config)#login block-for 120 attempts 3 within 60
+R1(config)#end
+R1#copy running-config startup-configundebug all
+Destination filename [startup-configundebug]? configure terminal
+%Error opening disk0:configure (No such device)
+R1#login block-for 120 attempts 3 within 60
+         ^
+% Invalid input detected at '^' marker.
+
+R1#end
+     ^
+% Invalid input detected at '^' marker.
+
+R1#copy running-config startup-conf
+*Nov 11 18:57:56.667: %SYS-5-CONFIG_I: Configured from console by user10 on vty0 (10.9.49.1)ig
+Destination filename [startup-config]? no
+%Error copying nvram:no (Invalid argument)
+R1#conf t
+Enter configuration commands, one per line.  End with CNTL/Z.
+R1(config)#login block-for 120 attempts 3 within 60
+R1(config)#end
+R1#
+*Nov 11 18:59:02.483: %SYS-5-CONFIG_I: Configured from console by user10 on vty0 (10.9.49.1)
+R1#copy run start
+Destination filename [startup-config]?
+Warning: Attempting to overwrite an NVRAM configuration previously written
+by a different version of the system image.
+Overwrite the previous NVRAM configuration?[confirm]
+Building configuration...
+[OK]
+R1#
+[Connection to 10.9.49.1 closed by foreign host]
+R1#show ip interface brief
+Interface              IP-Address      OK? Method Status                Protocol
+FastEthernet0/0        10.9.49.1       YES NVRAM  up                    up
+FastEthernet1/0        200.9.49.2      YES NVRAM  up                    up
+FastEthernet1/1        unassigned      YES NVRAM  administratively down down
+FastEthernet2/0        unassigned      YES NVRAM  administratively down down
+FastEthernet2/1        unassigned      YES NVRAM  administratively down down
+R1#show running-config | section dhcp
+ip dhcp excluded-address 10.9.49.1 10.9.49.20
+ip dhcp pool LAN
+ network 10.9.49.0 255.255.255.0
+ default-router 10.9.49.1
+ dns-server 8.8.8.8
+R1#show run | include transport b
+R1#show run | include transport b transport input ssh
+R1#ssh -l admin 10.9.49.1
+Password:
+
+Password:
+
+Password:
+
+[Connection to 10.9.49.1 closed by foreign host]
+R1#
+*Nov 11 19:22:12.871: %SEC_LOGIN-1-QUIET_MODE_ON: Still timeleft for watching failures is 27 secs, [user: admin] [Source: 10.9.49.1] [localport: 22] [Reason: Login Authentication Failed] [ACL: sl_def_acl] at 19:22:12 UTC Wed Nov 11 2026
+R1#exi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+R1 con0 is now available
+
+
+
+
+
+Press RETURN to get started.
+
+
+
+
+
+
+
+*Nov 11 19:24:12.871: %SEC_LOGIN-5-QUIET_MODE_OFF: Quiet Mode is OFF, because block period timed out at 19:24:12 UTC Wed Nov 11 2026CAcceso autorizado solamente. Acceso no autorizado prohibido.
+
+User Access Verification
+
+Username: admin
+Password:
+
+R1#exit
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+R1 con0 is now available
+
+
+
+
+
+Press RETURN to get started.
+
+
+
+
+
+
+
+
+
+CAcceso autorizado solamente. Acceso no autorizado prohibido.
+
+User Access Verification
+
+Username: admin
+Password:
+
+R1#ssh -l user10 10.9.49.1
+Password:
+CAcceso autorizado solamente. Acceso no autorizado prohibido.
+R1>en
+Password:
+R1#show running-config
+Building configuration...
+
+Current configuration : 2139 bytes
+!
+! Last configuration change at 18:59:02 UTC Wed Nov 11 2026 by user10
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$QGed$UDqbiO5lSKmzDZi/THOg6.
+!
+aaa new-model
+!
+!
+aaa authentication login default local
+aaa authentication login VTY-AUTH group radius local
+ --More--
